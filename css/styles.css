@@ -3,8 +3,7 @@
    Modern Dark Theme with Premium Aesthetics
    ============================================ */
 
-/* ---------- Google Fonts ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* ---------- Google Fonts loaded via <link> in index.html ---------- */
 
 /* ---------- CSS Variables ---------- */
 :root {
@@ -28,6 +27,23 @@
   --max-width: 1100px;
   --nav-height: 70px;
   --border-radius: 8px;
+}
+
+/* ---------- Light Theme Variables ---------- */
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-glow: rgba(5, 150, 105, 0.15);
+  --highlight: #111827;
+  --link: #059669;
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 10px 30px -15px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 20px 30px -15px rgba(0, 0, 0, 0.15);
 }
 
 /* ---------- Reset & Base ---------- */
@@ -216,6 +232,32 @@ ol {
   background: var(--accent-glow);
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--accent-glow);
+  transform: rotate(15deg);
+}
+
 /* Mobile hamburger */
 .nav-hamburger {
   display: none;
@@ -320,58 +362,79 @@ ol {
   color: var(--accent);
 }
 
-.scroll-indicator {
-  position: absolute;
+/* ---------- Hero Scroll Indicator ---------- */
+.hero-scroll-indicator {
+  position: fixed;
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   opacity: 0;
-  animation: fadeInUp 0.5s ease forwards 1.2s;
+  animation: fadeInUp 0.5s ease forwards 1.4s;
+  z-index: 10;
+  pointer-events: none;
 }
 
-.scroll-indicator span {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.scroll-icon {
-  width: 24px;
-  height: 36px;
-  border: 2px solid var(--text-secondary);
-  border-radius: 20px;
-  position: relative;
-}
-
-.scroll-icon::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  background: var(--accent);
+.scroll-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  transform: translateX(-50%);
-  animation: scrollWheel 2s infinite;
+  background: var(--accent);
+  animation: bounceDot 1.6s ease-in-out infinite;
 }
 
-@keyframes scrollWheel {
-  0% {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
+.scroll-dot::before,
+.scroll-dot::after {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.5;
+  margin-top: 6px;
+  animation: bounceDot 1.6s ease-in-out infinite;
+}
 
-  100% {
-    transform: translate(-50%, 15px);
-    opacity: 0;
-  }
+.scroll-dot::after {
+  opacity: 0.2;
+  animation-delay: 0.2s;
+}
+
+@keyframes bounceDot {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* ---------- In Progress Badge ---------- */
+.badge-inprogress {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  background: var(--accent-glow);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(100, 255, 218, 0.2); }
+  50% { box-shadow: 0 0 10px rgba(100, 255, 218, 0.5); }
+}
+
+.project-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .btn-primary-custom i {
@@ -651,13 +714,15 @@ ol {
   font-weight: 500;
 }
 
-.pub-links {
+.pub-links,
+.action-links {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.pub-link {
+.pub-link,
+.action-btn {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   display: inline-flex;
@@ -670,7 +735,8 @@ ol {
   transition: var(--transition);
 }
 
-.pub-link:hover {
+.pub-link:hover,
+.action-btn:hover {
   background: var(--accent-glow);
   color: var(--accent);
 }
@@ -937,6 +1003,26 @@ ol {
   font-weight: 600;
   color: var(--highlight);
   margin-bottom: 12px;
+  margin-top: 15px;
+}
+
+.project-thumbnail {
+  width: 100%;
+  height: 200px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.project-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.project-card:hover .project-thumbnail img {
+  transform: scale(1.05);
 }
 
 .project-desc {
@@ -1032,6 +1118,58 @@ ol {
   content: '▹';
   position: absolute;
   left: 5px;
+  color: var(--accent);
+}
+
+/* ---------- Contact Section ---------- */
+.contact-section {
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: 50px;
+}
+
+.contact-header {
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.contact-body {
+  margin-bottom: 40px;
+}
+
+.contact-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--highlight);
+  margin-bottom: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.contact-desc {
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.btn-contact {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+}
+
+.hero-strong {
+  color: var(--highlight);
+}
+
+.pub-summary {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin-bottom: 30px;
+}
+
+.pub-summary-highlight {
   color: var(--accent);
 }
 

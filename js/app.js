@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------- Navbar Scroll Effect ----------
   const navbar = document.querySelector('.navbar');
   const backToTop = document.querySelector('.back-to-top');
+  const heroScrollIndicator = document.querySelector('.hero-scroll-indicator');
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
@@ -23,6 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         backToTop.classList.remove('visible');
       }
+    }
+
+    // Hide scroll indicator after scrolling
+    if (heroScrollIndicator) {
+      heroScrollIndicator.style.opacity = window.scrollY > 100 ? '0' : '';
+      heroScrollIndicator.style.transition = 'opacity 0.4s ease';
     }
   });
 
@@ -98,6 +105,27 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+    });
+  }
+
+  // ---------- Copy Email to Clipboard ----------
+  const copyEmailBtn = document.getElementById('copyEmailBtn');
+  const emailContact = document.getElementById('emailContact');
+  if (copyEmailBtn && emailContact) {
+    copyEmailBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(emailContact.textContent)
+        .then(() => {
+          const originalHTML = copyEmailBtn.innerHTML;
+          copyEmailBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+          copyEmailBtn.style.color = '#64ffda'; // Highlight color
+          setTimeout(() => {
+            copyEmailBtn.innerHTML = originalHTML;
+            copyEmailBtn.style.color = '';
+          }, 2000);
+        })
+        .catch(err => {
+          console.error("Failed to copy email: ", err);
+        });
     });
   }
 
@@ -184,5 +212,30 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.research-card, .teaching-card, .project-card, .skill-category').forEach((card, index) => {
     card.style.transitionDelay = `${index * 0.1}s`;
   });
+  // ---------- Theme Toggle ----------
+  const themeToggle = document.getElementById('theme-toggle');
+  const storedTheme = localStorage.getItem('theme') || 'dark';
+
+  if (storedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    if (themeToggle) {
+      themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    }
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+      }
+    });
+  }
 
 });
